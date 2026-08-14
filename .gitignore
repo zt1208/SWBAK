@@ -1,0 +1,16 @@
+# 敏感文件 - 含密码/凭据, 禁止上传
+config.json
+devices.json
+
+# 备份数据与报告
+backups/
+交换机配置备份/
+reports/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 系统文件
+Thumbs.db
+.DS_Store
