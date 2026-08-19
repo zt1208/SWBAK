@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 - 交换机配置备份工具</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    /* 背景装饰光斑 */
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .25;
+    }
+    body::before { width: 420px; height: 420px; background: #3b82f6; top: -120px; left: -120px; }
+    body::after  { width: 380px; height: 380px; background: #8b5cf6; bottom: -120px; right: -100px; }
+
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: 400px;
+      max-width: calc(100vw - 40px);
+      padding: 44px 40px 36px;
+      background: rgba(30, 41, 59, .82);
+      border: 1px solid rgba(148, 163, 184, .18);
+      border-radius: 18px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+    }
+    .logo {
+      width: 64px; height: 64px;
+      margin: 0 auto 18px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 10px 26px rgba(59, 130, 246, .35);
+    }
+    h1 {
+      color: #f1f5f9;
+      font-size: 21px;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: .5px;
+    }
+    .sub {
+      color: #64748b;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block;
+      color: #94a3b8;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: #f1f5f9;
+      background: rgba(15, 23, 42, .6);
+      border: 1px solid rgba(148, 163, 184, .25);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, .18);
+    }
+    .field input::placeholder { color: #475569; }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      margin-top: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, .3);
+    }
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(59, 130, 246, .4); }
+    .btn-login:active { transform: translateY(0); opacity: .9; }
+
+    .error-box {
+      display: {% if error %}block{% else %}none{% endif %};
+      padding: 11px 14px;
+      margin-bottom: 20px;
+      color: #fca5a5;
+      font-size: 13px;
+      background: rgba(239, 68, 68, .12);
+      border: 1px solid rgba(239, 68, 68, .35);
+      border-radius: 10px;
+    }
+    .footer-note {
+      margin-top: 26px;
+      color: #475569;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <form class="login-card" method="post" action="/login" autocomplete="off">
+    <div class="logo">⬡</div>
+    <h1>交换机配置备份工具</h1>
+    <p class="sub">SWBAK · 请登录后继续</p>
+
+    <div class="error-box">{{ error or "" }}</div>
+
+    <div class="field">
+      <label>账号</label>
+      <input type="text" name="username" placeholder="请输入账号" autofocus required>
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input type="password" name="password" placeholder="请输入密码" required>
+    </div>
+
+    <button type="submit" class="btn-login">登 录</button>
+
+    <p class="footer-note">华为 · 华三 · 锐捷 ｜ SSH/Telnet 自动备份</p>
+  </form>
+</body>
+</html>
