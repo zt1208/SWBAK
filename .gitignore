@@ -1,11 +1,16 @@
 # 敏感文件 - 含密码/凭据, 禁止上传
 config.json
 devices.json
+swbak.db
+*.db
+_deploy/deploy.py
+_deploy/test_auth.py
 
 # 备份数据与报告
 backups/
 交换机配置备份/
 reports/
+logs/
 
 # Python 缓存
 __pycache__/
