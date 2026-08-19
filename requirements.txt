@@ -4,3 +4,4 @@
 netmiko>=4.2.0          # SSH/Telnet 多厂商交换机连接 (Huawei/H3C/Ruijie)
 openpyxl>=3.1.2         # Excel 批量导入读取
 xlsxwriter>=3.1.2       # Excel 报告导出
+flask>=3.0.0            # Web 服务框架 (B/S 架构后端)
