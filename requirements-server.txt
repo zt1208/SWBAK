@@ -1,0 +1,5 @@
+# 服务器(Linux)部署依赖 - Ubuntu 22.04 验证通过
+# 安装: venv/bin/pip install -r requirements-server.txt -i https://mirrors.aliyun.com/pypi/simple/
+
+-r requirements.txt
+gunicorn>=21.2.0         # 生产 WSGI 服务器 (1 worker + gthread, 兼容 SSE)
