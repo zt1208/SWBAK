@@ -1,0 +1,20 @@
+[Unit]
+Description=SWBAK Switch Config Backup Service
+Documentation=http://192.168.1.7:5000
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cdu
+Group=cdu
+WorkingDirectory=/home/cdu/swbak
+ExecStart=/home/cdu/swbak/venv/bin/gunicorn --workers 1 --threads 16 --worker-class gthread --bind 0.0.0.0:5000 --timeout 120 --graceful-timeout 30 --access-logfile - --error-logfile - --capture-output wsgi:app
+Restart=always
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=20
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
