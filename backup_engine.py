@@ -334,24 +334,47 @@ class BackupEngine:
                                   _safe_dirname(device.real_hostname))
             os.makedirs(folder, exist_ok=True)
 
+            # ---------- 与上次 latest 对比，无变化则不更新 ----------
+            latest = os.path.join(folder, "latest.txt")
+            has_latest = os.path.exists(latest)
+            same_as_latest = False
+            if has_latest:
+                with open(latest, "r", encoding="utf-8", errors="ignore") as f:
+                    old_text = f.read()
+                    # 按行规范化（去掉尾部空白和空行差异），逐行比较
+                    def norm_lines(s):
+                        return [l.rstrip() for l in s.splitlines()]
+                    if norm_lines(old_text) == norm_lines(config_text):
+                        same_as_latest = True
+
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"{_safe_dirname(device.real_hostname)}_{ts}.txt"
             filepath = os.path.join(folder, filename)
 
-            with open(filepath, "w", encoding="utf-8") as f:
-                f.write(config_text)
+            if same_as_latest:
+                # 配置无变化: 不新建文件，不覆盖 latest，状态标"无变化"
+                # 复用上次的 last_file (最后变化版本)
+                device.status = "无变化"
+                device.message = "配置无变化，未更新"
+                device.last_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # 保留上次文件路径不变，不新建不覆盖
+                self._log(f"[{device.host}] 配置无变化，跳过保存")
+            else:
+                # 配置有变化: 先保存新文件, 暂不更新 latest.txt
+                # latest.txt 等 _on_progress 生成 diff 后再更新
 
-            # 同时保留一份 latest.txt 方便对比
-            latest = os.path.join(folder, "latest.txt")
-            with open(latest, "w", encoding="utf-8") as f:
-                f.write(config_text)
+                with open(filepath, "w", encoding="utf-8") as f:
+                    f.write(config_text)
 
-            device.status = "成功"
-            device.message = f"已保存 {filename}"
-            device.last_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            device.last_file = filepath
-            size_kb = cfg_char_count / 1024
-            self._log(f"[{device.host}] 备份成功 -> {filepath} ({size_kb:.1f} KB)")
+                device.status = "成功"
+                device.message = f"配置变化，已保存 {filename}"
+                device.last_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                device.last_file = filepath
+                size_kb = cfg_char_count / 1024
+                self._log(f"[{device.host}] 配置变化，备份成功 -> {filepath} ({size_kb:.1f} KB)")
+
+                # 保存旧 latest 内容到设备对象, 供 _write_diff_file 使用
+                device._old_latest = old_text if has_latest else None
 
         except NetmikoAuthenticationException as e:
             device.status = "失败"
